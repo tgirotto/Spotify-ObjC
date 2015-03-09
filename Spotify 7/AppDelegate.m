@@ -12,7 +12,6 @@ static NSString * const kCallbackURL = @"spotifytutorial://returnAfterLogin";
 static NSString * const kTokenSwapServiceURL = @"https://hidden-hollows-1983.herokuapp.com/swap";
 
 @interface AppDelegate ()
-@property (nonatomic, readwrite) SPTAudioStreamingController *player;
 @end
 
 @implementation AppDelegate
@@ -24,7 +23,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     SPTAuth *auth = [SPTAuth defaultInstance];
     NSURL *loginURL = [auth loginURLForClientId:kClientId
                             declaredRedirectURL:[NSURL URLWithString:kCallbackURL]
-                                         scopes:@[SPTAuthStreamingScope]];
+                                         scopes:@[SPTAuthStreamingScope, SPTAuthPlaylistModifyPublicScope, SPTAuthPlaylistReadPrivateScope]];
     
     // Opening a URL in Safari close to application launch may trigger
     // an iOS bug, so we wait a bit before doing so.
@@ -56,44 +55,14 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                  return;
              }
              
-             [[NSUserDefaults standardUserDefaults] setObject:@"hello" forKey:@"SpotifySession"];
-             [[NSUserDefaults standardUserDefaults] synchronize];
+             NSDictionary *aDict=[NSDictionary dictionaryWithObject:session forKey:@"SpotifySession"];
+             [[NSNotificationCenter defaultCenter] postNotificationName:@"loginSuccessful" object:Nil userInfo:aDict];
              
-             // Call the -playUsingSession: method to play a track
-             [self playUsingSession:session];
-         }];
+        }];
         return YES;
     }
     
     return NO;
-}
-
--(void)playUsingSession:(SPTSession *)session {
-    
-    // Create a new player if needed
-    if (self.player == nil) {
-        self.player = [[SPTAudioStreamingController alloc] initWithClientId:kClientId];
-    }
-    
-    [self.player loginWithSession:session callback:^(NSError *error) {
-        
-        if (error != nil) {
-            NSLog(@"*** Enabling playback got error: %@", error);
-            return;
-        }
-        
-        [SPTRequest requestItemAtURI:[NSURL URLWithString:@"spotify:album:4L1HDyfdGIkACuygktO7T7"]
-                         withSession:nil
-                            callback:^(NSError *error, SPTAlbum *album) {
-                                
-                                if (error != nil) {
-                                    NSLog(@"*** Album lookup got error %@", error);
-                                    return;
-                                }
-                                //[self.player playTrackProvider:album callback:nil];
-                                
-                            }];
-    }];
 }
 
 @end

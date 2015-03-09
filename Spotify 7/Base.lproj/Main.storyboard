@@ -41,6 +41,9 @@
                             <constraint firstAttribute="centerX" secondItem="MZB-OW-1vd" secondAttribute="centerX" id="k9o-fm-AUQ"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="playlistName" destination="MZB-OW-1vd" id="46b-40-LIz"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

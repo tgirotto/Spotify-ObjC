@@ -11,6 +11,6 @@
 @interface ViewController : UIViewController
 
 - (IBAction)createButton:(id)sender;
+@property (weak, nonatomic) IBOutlet UITextField *playlistName;
 
 @end
-
