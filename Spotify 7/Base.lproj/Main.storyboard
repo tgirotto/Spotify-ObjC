@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="FJn-49-xQb">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Ivo-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
@@ -17,15 +18,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MZB-OW-1vd">
-                                <rect key="frame" x="217" y="285" width="167" height="30"/>
+                                <rect key="frame" x="16" y="80" width="451" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="167" id="H96-O9-ovp"/>
+                                    <constraint firstAttribute="width" constant="451" id="TM2-UZ-Fva">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="270"/>
+                                    </constraint>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hbg-lf-mpw">
-                                <rect key="frame" x="277" y="400" width="46" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hbg-lf-mpw">
+                                <rect key="frame" x="506" y="80" width="46" height="30"/>
                                 <state key="normal" title="Create">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -33,21 +36,90 @@
                                     <action selector="createButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="wda-o5-256"/>
                                 </connections>
                             </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="F1N-Bo-QJd">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="655" id="ioa-oP-JZY"/>
+                                    <constraint firstAttribute="width" constant="368" id="rtI-K2-mOc">
+                                        <variation key="heightClass=regular-widthClass=compact" constant="350"/>
+                                    </constraint>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="ioa-oP-JZY"/>
+                                        <exclude reference="rtI-K2-mOc"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=regular-widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="ioa-oP-JZY"/>
+                                        <include reference="rtI-K2-mOc"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="whg-9u-6HD"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="1ME-kp-FsD"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerX" secondItem="hbg-lf-mpw" secondAttribute="centerX" id="Kpx-sw-fYK"/>
-                            <constraint firstAttribute="centerY" secondItem="MZB-OW-1vd" secondAttribute="centerY" id="WlV-lB-Ewt"/>
-                            <constraint firstAttribute="centerX" secondItem="MZB-OW-1vd" secondAttribute="centerX" id="k9o-fm-AUQ"/>
+                            <constraint firstItem="MZB-OW-1vd" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="07g-Tq-2ql"/>
+                            <constraint firstAttribute="centerX" secondItem="F1N-Bo-QJd" secondAttribute="centerX" id="Lo5-RL-xr1"/>
+                            <constraint firstItem="F1N-Bo-QJd" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="Piw-ts-N9B"/>
+                            <constraint firstItem="hbg-lf-mpw" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="16" id="RmZ-fB-oU9"/>
+                            <constraint firstItem="F1N-Bo-QJd" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="61" id="SYa-iz-cSR"/>
+                            <constraint firstItem="MZB-OW-1vd" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="16" id="xUh-lN-iFO"/>
+                            <constraint firstItem="hbg-lf-mpw" firstAttribute="leading" secondItem="MZB-OW-1vd" secondAttribute="trailing" constant="25" id="yOf-NX-wAs"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="F1N-Bo-QJd"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="Lo5-RL-xr1"/>
+                                <exclude reference="Piw-ts-N9B"/>
+                                <exclude reference="SYa-iz-cSR"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular-widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="F1N-Bo-QJd"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="Lo5-RL-xr1"/>
+                                <exclude reference="Piw-ts-N9B"/>
+                                <include reference="SYa-iz-cSR"/>
+                            </mask>
+                        </variation>
                     </view>
+                    <navigationItem key="navigationItem" title="Ivo" id="d13-4a-Z4z"/>
                     <connections>
                         <outlet property="playlistName" destination="MZB-OW-1vd" id="46b-40-LIz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="139.5" y="137"/>
+            <point key="canvasLocation" x="819" y="160.5"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="URD-W3-n4G">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="FJn-49-xQb" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="dp8-ht-BGL">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="Vbc-qS-Xvt"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="veo-Pn-R97" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="8" y="161"/>
         </scene>
     </scenes>
 </document>

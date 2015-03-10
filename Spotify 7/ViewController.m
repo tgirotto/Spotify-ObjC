@@ -22,6 +22,7 @@ static NSString * const kTokenSwapServiceURL = @"https://hidden-hollows-1983.her
 @implementation ViewController
 
 SPTSession *session;
+NSArray *tableData;
 
 @synthesize playlistName;
 
@@ -30,6 +31,7 @@ SPTSession *session;
     // Do any additiona  l setup after loading the view, typically from a nib.
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(LoadRequestFromAppDel:) name:@"loginSuccessful" object:Nil];
+    [self loadPlalylists:session];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -46,6 +48,10 @@ SPTSession *session;
 {
     session=[[aNotif userInfo] objectForKey:@"SpotifySession"];
     //[self playUsingSession:session];
+}
+
+-(void)loadPlalylists:(SPTSession *)session {
+    tableData = [NSArray arrayWithObjects:@"Egg Benedict", @"Mushroom Risotto", @"Full Breakfast", @"Hamburger", @"Ham and Egg Sandwich", @"Creme Brelee", @"White Chocolate Donut", @"Starbucks Coffee", @"Vegetable Curry", @"Instant Noodle with Egg", @"Noodle with BBQ Pork", @"Japanese Noodle with Pork", @"Green Tea", @"Thai Shrimp Cake", @"Angry Birds Cake", @"Ham and Cheese Panini", nil];
 }
 
 -(void)playUsingSession:(SPTSession *)session {
@@ -119,18 +125,29 @@ SPTSession *session;
                         
                         NSLog(@"bam");
                     }];
-                
                 }];
             }
         }];
-        
-        //@[@"spotify:track:1ec6IDtSwq5rJdCog7GDZz"];
-        
-            //NSArray *found_tracks = object;
-            
-        
-        
     }];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [tableData count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *simpleTableIdentifier = @"SimpleTableItem";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+    
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
+    }
+    
+    cell.textLabel.text = [tableData objectAtIndex:indexPath.row];
+    return cell;
 }
 
 @end
