@@ -39,12 +39,12 @@ SPTSession *session;
 
 - (IBAction)createButton:(id)sender {
     [self createPlaylist:session andName:self.playlistName.text];
+    //[self getTrackUri:session andName:self.playlistName.text];
 }
 
 -(void)LoadRequestFromAppDel:(NSNotification*)aNotif
 {
     session=[[aNotif userInfo] objectForKey:@"SpotifySession"];
-    
     //[self playUsingSession:session];
 }
 
@@ -62,7 +62,7 @@ SPTSession *session;
             return;
         }
         
-        [SPTRequest requestItemAtURI:[NSURL URLWithString:@"spotify:album:4L1HDyfdGIkACuygktO7T7"]
+        [SPTRequest requestItemAtURI:[NSURL URLWithString:@"spotify:track:1ec6IDtSwq5rJdCog7GDZz"]
                          withSession:nil
                             callback:^(NSError *error, SPTAlbum *album) {
                                 
@@ -75,9 +75,62 @@ SPTSession *session;
     }];
 }
 
+-(void) getTrackUri:(SPTSession *)session andName:(NSString *)name {
+    [SPTRequest requestItemAtURI:[NSURL URLWithString:@"spotify:track:1ec6IDtSwq5rJdCog7GDZz"]
+                     withSession:nil
+                        callback:^(NSError *error, SPTAlbum *album) {
+                            if (error != nil) {
+                                NSLog(@"*** Album lookup got error %@", error);
+                                return;
+                            }
+    }];
+}
+
 -(void) createPlaylist: (SPTSession *)session andName:(NSString *)name {
-    //NSLog(name);
+    //SPTPlaylistList *list = [[SPTPlaylistList] init];
+    SPTPlaylistList *playlist = [[SPTPlaylistList alloc] init];
     
-    [SPTListPage create];
+    [playlist createPlaylistWithName:name publicFlag:1 session:session callback:^(NSError *error, SPTPlaylistSnapshot *playlist) {
+        if (error != nil) {
+            NSLog(@"An error occurred");
+        }
+        
+        [SPTRequest performSearchWithQuery:name queryType:SPTQueryTypeTrack offset:0 session:session callback:^(NSError *error, id object) {
+            if (error != nil) {
+                NSLog(@"An error occurred");
+            }
+            
+            SPTListPage *list = object;
+            SPTPartialTrack *partialTrack = list.items.firstObject;
+            
+            if(partialTrack != nil) {
+                [SPTRequest requestItemFromPartialObject:partialTrack withSession:session callback:^(NSError *error, id object) {
+                    if(error != nil) {
+                        NSLog(@"An error occurred");
+                    }
+                    
+                    SPTTrack *track = object;
+                    NSArray *tracks = [NSArray arrayWithObjects:track, nil];
+                    
+                    [playlist addTracksToPlaylist:tracks withSession:session callback:^(NSError *error) {
+                        if (error != nil) {
+                            NSLog(@"An error occurred");
+                        }
+                        
+                        NSLog(@"bam");
+                    }];
+                
+                }];
+            }
+        }];
+        
+        //@[@"spotify:track:1ec6IDtSwq5rJdCog7GDZz"];
+        
+            //NSArray *found_tracks = object;
+            
+        
+        
+    }];
+}
 
 @end
