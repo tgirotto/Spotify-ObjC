@@ -22,16 +22,17 @@ static NSString * const kTokenSwapServiceURL = @"https://hidden-hollows-1983.her
 @implementation ViewController
 
 SPTSession *session;
-NSArray *tableData;
+NSMutableArray *tableData;
+SPTListPage *page;
 
 @synthesize playlistName;
+@synthesize tableView;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additiona  l setup after loading the view, typically from a nib.
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(LoadRequestFromAppDel:) name:@"loginSuccessful" object:Nil];
-    [self loadPlalylists:session];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -44,14 +45,64 @@ NSArray *tableData;
     //[self getTrackUri:session andName:self.playlistName.text];
 }
 
--(void)LoadRequestFromAppDel:(NSNotification*)aNotif
-{
+-(void)LoadRequestFromAppDel:(NSNotification*)aNotif {
     session=[[aNotif userInfo] objectForKey:@"SpotifySession"];
-    //[self playUsingSession:session];
+    [self loadPlaylists:session];
 }
 
--(void)loadPlalylists:(SPTSession *)session {
-    tableData = [NSArray arrayWithObjects:@"Egg Benedict", @"Mushroom Risotto", @"Full Breakfast", @"Hamburger", @"Ham and Egg Sandwich", @"Creme Brelee", @"White Chocolate Donut", @"Starbucks Coffee", @"Vegetable Curry", @"Instant Noodle with Egg", @"Noodle with BBQ Pork", @"Japanese Noodle with Pork", @"Green Tea", @"Thai Shrimp Cake", @"Angry Birds Cake", @"Ham and Cheese Panini", nil];
+-(void)loadPlaylists:(SPTSession *)session {
+    tableData = [[NSMutableArray alloc] init];
+    
+    [SPTRequest playlistsForUserInSession:session callback:^(NSError *error, id object) {
+        if(error != nil) {
+            NSLog(@"An error occurred");
+            return;
+        }
+        
+        __block SPTListPage *page = object;
+        SPTPlaylistSnapshot *unit;
+        int remaining_length = page.totalListLength;
+        
+        for(int i = 0; i < page.items.count; i++) {
+            unit = page.items[i];
+            NSLog(unit.name);
+            [tableData addObject:unit.name];
+        }
+        
+        remaining_length -= 20;
+        if (remaining_length > 0) {
+            [self loadPage:session currentPage:page remainingLength:remaining_length];
+        }
+    }];
+    
+}
+
+-(void) loadPage:(SPTSession *)session currentPage:(SPTListPage *)page remainingLength:(int)length {
+    [page requestNextPageWithSession:session callback:^(NSError *error, id object) {
+        if (error != nil) {
+            NSLog(@"An error occurred");
+        }
+        
+        //NSLog(@"got to this point");
+        
+        SPTListPage *result = object;
+        SPTListPage *pointer = object;
+        SPTPlaylistSnapshot *playlist;
+        
+        for(int i = 0; i < pointer.items.count; i++) {
+            playlist = pointer.items[i];
+            NSLog(playlist.name);
+            [tableData addObject:playlist.name];
+        }
+        
+        int temp = length - 20;
+        if (temp > 0) {
+            NSLog(@"%d", temp);
+            [self loadPage:session currentPage: result remainingLength:temp];
+        } else {
+            [tableView reloadData];
+        }
+    }];
 }
 
 -(void)playUsingSession:(SPTSession *)session {

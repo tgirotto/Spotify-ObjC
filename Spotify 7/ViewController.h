@@ -10,6 +10,8 @@
 
 @interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+
 - (IBAction)createButton:(id)sender;
 @property (weak, nonatomic) IBOutlet UITextField *playlistName;
 

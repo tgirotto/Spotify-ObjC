@@ -98,6 +98,7 @@
                     <navigationItem key="navigationItem" title="Ivo" id="d13-4a-Z4z"/>
                     <connections>
                         <outlet property="playlistName" destination="MZB-OW-1vd" id="46b-40-LIz"/>
+                        <outlet property="tableView" destination="F1N-Bo-QJd" id="l8w-y7-e61"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
