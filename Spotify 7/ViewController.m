@@ -23,6 +23,7 @@ static NSString * const kTokenSwapServiceURL = @"https://hidden-hollows-1983.her
 
 SPTSession *session;
 NSMutableArray *tableData;
+NSMutableArray *uris;
 SPTListPage *page;
 
 @synthesize playlistName;
@@ -52,6 +53,7 @@ SPTListPage *page;
 
 -(void)loadPlaylists:(SPTSession *)session {
     tableData = [[NSMutableArray alloc] init];
+    uris = [[NSMutableArray alloc] init];
     
     [SPTRequest playlistsForUserInSession:session callback:^(NSError *error, id object) {
         if(error != nil) {
@@ -59,7 +61,7 @@ SPTListPage *page;
             return;
         }
         
-        __block SPTListPage *page = object;
+        SPTListPage *page = object;
         SPTPlaylistSnapshot *unit;
         int remaining_length = page.totalListLength;
         
@@ -67,11 +69,14 @@ SPTListPage *page;
             unit = page.items[i];
             NSLog(unit.name);
             [tableData addObject:unit.name];
+            [uris addObject: [unit.playableUri absoluteString]];
         }
         
         remaining_length -= 20;
         if (remaining_length > 0) {
             [self loadPage:session currentPage:page remainingLength:remaining_length];
+        } else {
+            [tableView reloadData];
         }
     }];
     
@@ -93,6 +98,7 @@ SPTListPage *page;
             playlist = pointer.items[i];
             NSLog(playlist.name);
             [tableData addObject:playlist.name];
+            [uris addObject: [playlist.playableUri absoluteString]];
         }
         
         int temp = length - 20;
@@ -105,7 +111,7 @@ SPTListPage *page;
     }];
 }
 
--(void)playUsingSession:(SPTSession *)session {
+-(void)playUsingSession:(SPTSession *)session playlist:(NSURL *)name {
     
     // Create a new player if needed
     if (self.player == nil) {
@@ -119,8 +125,8 @@ SPTListPage *page;
             return;
         }
         
-        [SPTRequest requestItemAtURI:[NSURL URLWithString:@"spotify:track:1ec6IDtSwq5rJdCog7GDZz"]
-                         withSession:nil
+        [SPTRequest requestItemAtURI:[NSURL URLWithString:name]
+                         withSession:session
                             callback:^(NSError *error, SPTAlbum *album) {
                                 
                                 if (error != nil) {
@@ -182,13 +188,11 @@ SPTListPage *page;
     }];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [tableData count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *simpleTableIdentifier = @"SimpleTableItem";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
@@ -199,6 +203,11 @@ SPTListPage *page;
     
     cell.textLabel.text = [tableData objectAtIndex:indexPath.row];
     return cell;
+}
+
+- (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath {
+    int index = indexPath.row;
+    [self playUsingSession:session playlist:uris[index]];
 }
 
 @end
